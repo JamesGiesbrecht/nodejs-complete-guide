@@ -1,5 +1,5 @@
 const http = require('http')
-const fs = require('fs')
+const { promises: fs } = require('fs')
 
 const PORT = 3000
 
@@ -19,14 +19,13 @@ const server = http.createServer((req, res) => {
       console.log(chunk)
       body.push(chunk)
     })
-    return req.on('end', () => {
+    return req.on('end', async () => {
       const parsedBody = Buffer.concat(body).toString()
       const message = parsedBody.split('=')[1]
-      fs.writeFile('message.txt', message, (err) => {
-        res.statusCode = 302
-        res.setHeader('Location', '/')
-        return res.end()
-      })
+      await fs.writeFile('message.txt', message)
+      res.statusCode = 302
+      res.setHeader('Location', '/')
+      return res.end()
     })
   }
   res.write('<html>')
