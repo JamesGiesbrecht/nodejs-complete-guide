@@ -9,6 +9,7 @@ const requestHandler = (req, res) => {
   ]
 
   if (url === '/') {
+    res.setHeader('Content-Type', 'text/html')
     res.write('<html>')
     res.write('<head><title>Create User</title></head>')
     res.write('<body>')
@@ -17,6 +18,18 @@ const requestHandler = (req, res) => {
     res.write('</body>')
     res.write('</html>')
   }
+  if (url === '/users') {
+    res.setHeader('Content-Type', 'text/html')
+    res.write('<html>')
+    res.write('<head><title>Users</title></head>')
+    res.write('<body><ul>')
+    users.forEach((user) => {
+      res.write(`<li>${user}</li>`)
+    })
+    res.write('</ul></body>')
+    res.write('</html>')
+  }
+  //  Send 404 page
   if (url === '/create-user' && method === 'POST') {
     const body = []
     req.on('data', (chunk) => body.push(chunk))
@@ -29,16 +42,6 @@ const requestHandler = (req, res) => {
       res.setHeader('Location', '/')
       return res.end()
     })
-  }
-  if (url === '/users') {
-    res.write('<html>')
-    res.write('<head><title>Users</title></head>')
-    res.write('<body><ul>')
-    users.forEach((user) => {
-      res.write(`<li>${user}</li>`)
-    })
-    res.write('</ul></body>')
-    res.write('</html>')
   }
   return res.end()
 }
