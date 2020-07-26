@@ -20,5 +20,7 @@
     "eslint-plugin-security": "^1.4.0",
     "nodemon": "^2.0.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
