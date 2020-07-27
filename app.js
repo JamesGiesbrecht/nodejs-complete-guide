@@ -1,15 +1,19 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 
 const app = express()
 const PORT = 3000
 
-app.use((req, res, next) => {
-  console.log('This always runs')
-  next()
-})
+//  Third party middleware to parse requests
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use('/add-product', (req, res, next) => {
-  res.send('<h1>Product Added</h1>')
+  res.send('<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></input></form>')
+})
+
+app.use('/product', (req, res) => {
+  console.log(req.body)
+  res.redirect('/')
 })
 
 app.use((req, res, next) => {
