@@ -11,7 +11,7 @@ const shopRoutes = require('./routes/shop')
 app.use(bodyParser.urlencoded({ extended: false }))
 
 //  Importing routes to app.js, the order still matters
-app.use(adminRoutes)
+app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
 app.use(shopRoutes)
 
 app.use((req, res) => {
