@@ -1,4 +1,6 @@
 const express = require('express')
+const path = require('path')
+
 const bodyParser = require('body-parser')
 
 const app = express()
@@ -15,7 +17,7 @@ app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the ur
 app.use(shopRoutes)
 
 app.use((req, res) => {
-  res.status(404).send('<h1>404: Page not found</h1>')
+  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
 })
 
 app.listen(PORT)
