@@ -11,6 +11,7 @@ const shopRoutes = require('./routes/shop')
 
 //  Third party middleware to parse requests
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.static(path.join(__dirname, 'public')))
 
 //  Importing routes to app.js, the order still matters
 app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
