@@ -9,4 +9,4 @@ router.get('/', (req, res) => {
   res.sendFile(path.join(rootDir, 'views', 'shop.html'))
 })
 
-module.exports = router
+exports.routes = router
