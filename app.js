@@ -4,21 +4,15 @@ const bodyParser = require('body-parser')
 const app = express()
 const PORT = 3000
 
+const adminRoutes = require('./routes/admin')
+const shopRoutes = require('./routes/shop')
+
 //  Third party middleware to parse requests
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use('/add-product', (req, res, next) => {
-  res.send('<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></input></form>')
-})
-
-app.post('/product', (req, res) => {
-  console.log(req.body)
-  res.redirect('/')
-})
-
-app.use((req, res, next) => {
-  res.send('<h1>Hello from Express</h1>')
-})
+//  Importing routes to app.js, the order still matters
+app.use(adminRoutes)
+app.use(shopRoutes)
 
 app.listen(PORT)
 
