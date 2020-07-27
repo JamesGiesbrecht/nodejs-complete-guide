@@ -14,7 +14,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(adminRoutes)
 app.use(shopRoutes)
 
-app.listen(PORT)
+app.use((req, res) => {
+  res.status(404).send('<h1>404: Page not found</h1>')
+})
 
+app.listen(PORT)
 // eslint-disable-next-line no-console
 console.log(`Server is live on port ${PORT}`)
