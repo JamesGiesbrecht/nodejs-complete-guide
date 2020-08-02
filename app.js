@@ -21,7 +21,7 @@ app.use('/admin', adminData.routes) // Filtering admin routes with a /admin in t
 app.use(shopData.routes)
 
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
+  res.status(404).render('404', { docTitle: 'Page Not Found' })
 })
 
 app.listen(PORT)
