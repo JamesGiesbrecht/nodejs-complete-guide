@@ -6,6 +6,9 @@ const bodyParser = require('body-parser')
 const app = express()
 const PORT = 3000
 
+app.set('view engine', 'pug')
+app.set('views', 'views') //  Explicity setting the views directory, views is also the default
+
 const adminData = require('./routes/admin')
 const shopData = require('./routes/shop')
 
