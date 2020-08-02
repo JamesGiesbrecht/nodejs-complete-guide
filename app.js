@@ -2,11 +2,13 @@ const express = require('express')
 const path = require('path')
 
 const bodyParser = require('body-parser')
+const expressHbs = require('express-handlebars')
 
 const app = express()
 const PORT = 3000
 
-app.set('view engine', 'pug')
+app.engine('hbs', expressHbs())
+app.set('view engine', 'hbs')
 app.set('views', 'views') //  Explicity setting the views directory, views is also the default
 
 const adminData = require('./routes/admin')
