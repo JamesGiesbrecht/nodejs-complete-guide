@@ -7,7 +7,6 @@ const app = express()
 const PORT = 3000
 
 app.set('view engine', 'ejs')
-app.set('views', 'views') //  Explicity setting the views directory, views is also the default
 
 const adminData = require('./routes/admin')
 const shopData = require('./routes/shop')
@@ -21,7 +20,7 @@ app.use('/admin', adminData.routes) // Filtering admin routes with a /admin in t
 app.use(shopData.routes)
 
 app.use((req, res) => {
-  res.status(404).render('404', { docTitle: 'Page Not Found' })
+  res.status(404).render('404', { docTitle: 'Page Not Found', path: null })
 })
 
 app.listen(PORT)
