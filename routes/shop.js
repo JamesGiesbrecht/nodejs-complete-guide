@@ -8,7 +8,9 @@ const router = express.Router()
 
 router.get('/', (req, res) => {
   const { products } = adminData
-  res.render('shop', { prods: products, docTitle: 'Shop', path: '/' })
+  res.render('shop', {
+    prods: products, docTitle: 'Shop', path: '/', hasProducts: products.length > 0
+  })
 })
 
 exports.routes = router
