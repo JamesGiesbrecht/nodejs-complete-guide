@@ -7,7 +7,11 @@ const expressHbs = require('express-handlebars')
 const app = express()
 const PORT = 3000
 
-app.engine('hbs', expressHbs())
+app.engine('hbs', expressHbs({
+  layoutsDir: 'views/layouts/', // Default directory
+  defaultLayout: 'main-layout',
+  extname: 'hbs',
+}))
 app.set('view engine', 'hbs')
 app.set('views', 'views') //  Explicity setting the views directory, views is also the default
 
