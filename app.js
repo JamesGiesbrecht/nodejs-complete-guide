@@ -8,6 +8,7 @@ const PORT = 3000
 
 app.set('view engine', 'ejs')
 
+const errorController = require('./controllers/error')
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 
@@ -19,9 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
 app.use(shopRoutes)
 
-app.use((req, res) => {
-  res.status(404).render('404', { docTitle: 'Page Not Found', path: null })
-})
+app.use(errorController.get404)
 
 app.listen(PORT)
 // eslint-disable-next-line no-console
