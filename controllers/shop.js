@@ -28,6 +28,14 @@ exports.postCart = (req, res) => {
   res.redirect('/cart')
 }
 
+exports.postCartDeleteItem = (req, res) => {
+  const { productId } = req.body
+  Product.findById(productId, (product) => {
+    Cart.deleteProduct(productId, product.price)
+    res.redirect('/cart')
+  })
+}
+
 exports.getOrders = (req, res) => {
   res.render('shop/orders', {
     pageTitle: 'My Orders',
