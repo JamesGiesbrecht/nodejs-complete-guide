@@ -14,6 +14,17 @@ module.exports = class Cart {
     this.totalPrice = 0
   }
 
+  static getCart(cb) {
+    fs.readFile(p, (err, fileContent) => {
+      const cart = JSON.parse(fileContent)
+      if (err) {
+        cb(null)
+      } else {
+        cb(cart)
+      }
+    })
+  }
+
   static addProduct(id, price) {
     // Fetch prev cart
     fs.readFile(p, (err, fileContent) => {

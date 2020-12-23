@@ -5,5 +5,14 @@
   <%- include('../includes/navigation.ejs') %>
   <main>
     <h1>Cart</h1>
+    <% if (products.length > 0) { %>
+      <ul>
+        <% products.forEach((p) => { %>
+          <li><%= p.productData.title %> (<%= p.qty %>)</li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <h2>No Products in Cart</h2>
+    <% } %>
   </main>
 <%- include('../includes/end.ejs') %>
