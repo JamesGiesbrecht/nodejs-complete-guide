@@ -54,7 +54,7 @@ exports.getProduct = (req, res) => {
     res.render('shop/product-detail', {
       product,
       pageTitle: `${product.title} Details`,
-      path: `/products/${product.id}`,
+      path: '/products',
     })
   ))
 }
