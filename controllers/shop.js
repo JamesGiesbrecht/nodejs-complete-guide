@@ -47,3 +47,14 @@ exports.getProducts = (req, res) => {
     })
   })
 }
+
+exports.getProduct = (req, res) => {
+  const { productId } = req.params
+  Product.findById(productId, (product) => (
+    res.render('shop/product-detail', {
+      product,
+      pageTitle: `${product.title} Details`,
+      path: `/products/${product.id}`,
+    })
+  ))
+}
