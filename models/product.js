@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-object-injection */
 const fs = require('fs')
 const path = require('path')
 
@@ -18,7 +19,8 @@ const getProductsFromFile = (cb) => {
 }
 
 module.exports = class Product {
-  constructor(title, imageUrl, description, price) {
+  constructor(id, title, imageUrl, description, price) {
+    this.id = id
     this.title = title
     this.imageUrl = imageUrl
     this.description = description
@@ -27,12 +29,22 @@ module.exports = class Product {
 
   save() {
     // Temp dummy id
-    this.id = Math.random().toString()
     getProductsFromFile((products) => {
-      products.push(this)
-      fs.writeFile(p, JSON.stringify(products), (err) => {
-        console.log(err)
-      })
+      if (this.id) {
+        // Finding the product with that ID and updating it with the current one
+        const existingProductsIndex = products.findIndex((product) => product.id === this.id)
+        const updatedProducts = [...products]
+        updatedProducts[existingProductsIndex] = this
+        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+          console.log(err)
+        })
+      } else {
+        this.id = Math.random().toString()
+        products.push(this)
+        fs.writeFile(p, JSON.stringify(products), (err) => {
+          console.log(err)
+        })
+      }
     })
   }
 
