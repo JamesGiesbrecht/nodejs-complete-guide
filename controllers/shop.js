@@ -52,7 +52,7 @@ exports.getCheckout = (req, res) => {
 
 exports.getIndex = (req, res) => {
   Product.fetchAll()
-    .then(([rows, fieldData]) => {
+    .then(([rows]) => {
       res.render('shop/index', {
         prods: rows,
         pageTitle: 'Shop',
@@ -71,7 +71,7 @@ exports.getProductDetail = (req, res) => {
 
 exports.getProducts = (req, res) => {
   Product.fetchAll()
-    .then(([rows, fieldData]) => {
+    .then(([rows]) => {
       res.render('shop/product-list', {
         prods: rows,
         pageTitle: 'All Products',
