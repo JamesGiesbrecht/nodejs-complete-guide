@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
-
 const bodyParser = require('body-parser')
+const sequelize = require('./util/database')
 
 const app = express()
 const PORT = 3000
@@ -22,6 +22,12 @@ app.use(shopRoutes)
 
 app.use(errorController.get404)
 
-app.listen(PORT)
+sequelize.sync()
+  .then((result) => {
+    // console.log(result)
+    app.listen(PORT)
+  })
+  .catch((error) => console.log(error))
+
 // eslint-disable-next-line no-console
 console.log(`Server is live on port ${PORT}`)
