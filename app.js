@@ -8,6 +8,8 @@ const PORT = 3000
 
 const Product = require('./models/product')
 const User = require('./models/user')
+const Cart = require('./models/cart')
+const CartItem = require('./models/cartItem')
 
 const errorController = require('./controllers/error')
 const adminRoutes = require('./routes/admin')
@@ -36,6 +38,11 @@ app.use(errorController.get404)
 
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' })
 User.hasMany(Product) // Optional
+User.hasOne(Cart)
+Cart.belongsTo(User) // Optional
+Cart.belongsToMany(Product, { through: CartItem })
+Product.belongsToMany(Cart, { through: CartItem })
+
 
 sequelize
   // .sync({ force: true }) // Might not want to use this in prod
