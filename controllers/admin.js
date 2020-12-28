@@ -11,7 +11,8 @@ exports.getAddProduct = (req, res) => {
 
 exports.postAddProduct = (req, res) => {
   const { title, imageUrl, price, description } = req.body
-  Product.create({
+  // DB entry added in middleware
+  req.user.createProduct({
     title,
     imageUrl,
     price,
