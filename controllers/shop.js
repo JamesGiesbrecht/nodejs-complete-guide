@@ -1,5 +1,4 @@
 const Product = require('../models/product')
-const Cart = require('../models/cart')
 
 exports.getCart = (req, res) => {
   req.user
@@ -110,4 +109,24 @@ exports.getProduct = (req, res) => {
       })
     })
     .catch((error) => console.log(error))
+}
+
+exports.postOrder = (req, res, next) => {
+  let cartProducts
+  req.user
+    .getCart()
+    .then((cart) => cart.getProducts())
+    .then((products) => {
+      cartProducts = products
+      return req.user.createOrder()
+    })
+    .then((order) => (
+      order.addProducts(cartProducts.map((product) => {
+        // eslint-disable-next-line no-param-reassign
+        product.orderItem = { quantity: product.cartItem.quantity }
+        return product
+      }))
+    ))
+    .catch((error) => console.log(error))
+    .finally(() => res.redirect('/orders'))
 }
