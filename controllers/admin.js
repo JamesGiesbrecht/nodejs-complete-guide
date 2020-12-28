@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const Product = require('../models/product')
 
 exports.getAddProduct = (req, res) => {
@@ -25,23 +26,35 @@ exports.getEditProduct = (req, res) => {
   if (!editMode) return res.redirect('/')
 
   const { productId } = req.params
-  Product.findById(productId, (product) => {
-    if (!product) return res.redirect('/')
-
-    res.render('admin/edit-product', {
-      pageTitle: 'Edit Product',
-      path: '/admin/edit-product',
-      editing: editMode,
-      product,
+  Product.findByPk(productId)
+    .then((product) => {
+      if (!product) return res.redirect('/')
+      res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: '/admin/edit-product',
+        editing: editMode,
+        product,
+      })
     })
-  })
+    .catch((error) => console.log(error))
 }
 
 exports.postEditProduct = (req, res) => {
   const { productId, title, imageUrl, price, description } = req.body
-  const updatedProduct = new Product(productId, title, imageUrl, description, price)
-  updatedProduct.save()
-  res.redirect('/admin/products')
+  Product.findByPk(productId)
+    .then((product) => {
+      product.title = title
+      product.imageUrl = imageUrl
+      product.price = price
+      product.description = description
+      return product.save()
+    })
+    .then((result) => {
+      // product.save then
+      console.log(`Updated Product: ${title}`)
+    })
+    .catch((error) => console.log(error))
+    .finally(() => res.redirect('/admin/products'))
 }
 
 exports.postDeleteProduct = (req, res) => {
