@@ -6,12 +6,14 @@ const sequelize = require('./util/database')
 const app = express()
 const PORT = 3000
 
-app.set('view engine', 'ejs')
+const Product = require('./models/product')
+const User = require('./models/user')
 
 const errorController = require('./controllers/error')
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 
+app.set('view engine', 'ejs')
 //  Third party middleware to parse requests
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
@@ -22,7 +24,12 @@ app.use(shopRoutes)
 
 app.use(errorController.get404)
 
-sequelize.sync()
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' })
+User.hasMany(Product) // Optional
+
+sequelize
+  // .sync({ force: true }) // Might not want to use this in prod
+  .sync()
   .then((result) => {
     // console.log(result)
     app.listen(PORT)
