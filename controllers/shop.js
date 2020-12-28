@@ -82,10 +82,10 @@ exports.getProducts = (req, res) => {
 
 exports.getProduct = (req, res) => {
   const { productId } = req.params
-  Product.findById(productId)
-    .then(([product]) => {
+  Product.findByPk(productId)
+    .then((product) => {
       res.render('shop/product-detail', {
-        product: product[0],
+        product,
         pageTitle: `${product.title} Details`,
         path: '/products',
       })
