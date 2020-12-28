@@ -54,7 +54,8 @@ sequelize
     }
     return Promise.resolve(user)
   })
-  .then((user) => app.listen(PORT))
+  .then((user) => user.createCart())
+  .then((cart) => app.listen(PORT))
   .catch((error) => console.log(error))
 
 // eslint-disable-next-line no-console
