@@ -2,14 +2,14 @@ const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
 
-const mongoConnect = require('./util/database')
+const { mongoConnect } = require('./util/database')
 
 const app = express()
 const PORT = 3000
 
-// const errorController = require('./controllers/error')
-// const adminRoutes = require('./routes/admin')
-// const shopRoutes = require('./routes/shop')
+const errorController = require('./controllers/error')
+const adminRoutes = require('./routes/admin')
+const shopRoutes = require('./routes/shop')
 
 app.set('view engine', 'ejs')
 //  Third party middleware to parse requests
@@ -27,15 +27,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 // })
 
 //  Importing routes to app.js, the order still matters
-// app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
+app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
 // app.use(shopRoutes)
 
 // app.use(errorController.get404)
 
-mongoConnect((client) => {
-  console.log(client)
+mongoConnect(() => {
   app.listen(PORT)
   // eslint-disable-next-line no-console
   console.log(`Server is live on port ${PORT}`)
 })
-
