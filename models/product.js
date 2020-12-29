@@ -1,6 +1,5 @@
-const Sequelize = require('sequelize')
+const { getDb } = require('../util/database')
 
-const sequelize = require('../util/database')
 
 const Product = sequelize.define('product', {
   id: {
