@@ -67,16 +67,14 @@ exports.postAddProduct = (req, res) => {
 //     .finally(() => res.redirect('/admin/products'))
 // }
 
-// exports.getProducts = (req, res) => {
-//   req.user
-//     .getProducts()
-//   // Product.findAll()
-//     .then((products) => {
-//       res.render('admin/products', {
-//         prods: products,
-//         pageTitle: 'Admin Products',
-//         path: '/admin/products',
-//       })
-//     })
-//     .catch((error) => console.log(error))
-// }
+exports.getProducts = (req, res) => {
+  Product.fetchAll()
+    .then((products) => {
+      res.render('admin/products', {
+        prods: products,
+        pageTitle: 'Admin Products',
+        path: '/admin/products',
+      })
+    })
+    .catch((error) => console.log(error))
+}
