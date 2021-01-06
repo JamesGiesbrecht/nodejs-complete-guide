@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //  Importing routes to app.js, the order still matters
 app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
-// app.use(shopRoutes)
+app.use(shopRoutes)
 
 app.use(errorController.get404)
 
