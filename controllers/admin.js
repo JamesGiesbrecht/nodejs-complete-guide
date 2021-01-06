@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-const mongodb = require('mongodb')
 const Product = require('../models/product')
 
 exports.getAddProduct = (req, res) => {
@@ -41,7 +40,7 @@ exports.getEditProduct = (req, res) => {
 
 exports.postEditProduct = (req, res) => {
   const { productId, title, imageUrl, price, description } = req.body
-  const product = new Product(title, price, description, imageUrl, new mongodb.ObjectID(productId))
+  const product = new Product(title, price, description, imageUrl, productId)
   product.save()
     .then((result) => {
       // product.save then
