@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
 // app.use(shopRoutes)
 
-// app.use(errorController.get404)
+app.use(errorController.get404)
 
 mongoConnect(() => {
   app.listen(PORT)

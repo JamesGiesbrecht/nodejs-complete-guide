@@ -11,13 +11,9 @@ exports.getAddProduct = (req, res) => {
 
 exports.postAddProduct = (req, res) => {
   const { title, imageUrl, price, description } = req.body
-  // DB entry added in middleware
-  req.user.createProduct({
-    title,
-    imageUrl,
-    price,
-    description,
-  })
+  const product = new Product(title, price, description, imageUrl)
+  product
+    .save()
     .then((result) => console.log(`Created product: ${title}`))
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/admin/products'))
