@@ -106,7 +106,7 @@ exports.getProduct = (req, res) => {
   // Product.findAll({
   //   where: { id: productId },
   // })
-  Product.findByPk(productId)
+  Product.findById(productId)
     .then((product) => {
       res.render('shop/product-detail', {
         product,
