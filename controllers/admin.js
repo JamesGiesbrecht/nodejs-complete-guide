@@ -50,14 +50,13 @@ exports.postEditProduct = (req, res) => {
     .finally(() => res.redirect('/admin/products'))
 }
 
-// exports.postDeleteProduct = (req, res) => {
-//   const { productId } = req.body
-//   Product.findByPk(productId)
-//     .then((product) => product.destroy())
-//     .then((result) => console.log(`Destroyed product: ${productId}`))
-//     .catch((error) => console.log(error))
-//     .finally(() => res.redirect('/admin/products'))
-// }
+exports.postDeleteProduct = (req, res) => {
+  const { productId } = req.body
+  Product.deleteById(productId)
+    .then((result) => console.log(`Destroyed product: ${productId}`))
+    .catch((error) => console.log(error))
+    .finally(() => res.redirect('/admin/products'))
+}
 
 exports.getProducts = (req, res) => {
   Product.fetchAll()
