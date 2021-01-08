@@ -37,12 +37,22 @@ function addToCart(product) {
     })
   }
 
-  this.cart = { items: updatedCartItems }
+  this.cart.items = updatedCartItems
 
   return this.save()
 }
 
+function removeFromCart(productId) {
+  const updatedCartItems = this.cart.items.filter((item) => (
+    item.productId.toString() !== productId.toString()
+  ))
+
+  this.cart.items = updatedCartItems
+  return this.save()
+}
+
 userSchema.methods.addToCart = addToCart
+userSchema.methods.removeFromCart = removeFromCart
 module.exports = mongoose.model('User', userSchema)
 
 /*
