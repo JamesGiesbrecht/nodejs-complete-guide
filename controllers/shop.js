@@ -96,26 +96,8 @@ exports.getProduct = (req, res) => {
 }
 
 exports.postOrder = (req, res) => {
-  let cartProducts
-  let fetchedCart
   req.user
-    .getCart()
-    .then((cart) => {
-      fetchedCart = cart
-      return cart.getProducts()
-    })
-    .then((products) => {
-      cartProducts = products
-      return req.user.createOrder()
-    })
-    .then((order) => (
-      order.addProducts(cartProducts.map((product) => {
-        // eslint-disable-next-line no-param-reassign
-        product.orderItem = { quantity: product.cartItem.quantity }
-        return product
-      }))
-    ))
-    .then((result) => fetchedCart.setProducts(null))
+    .addOrder()
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/orders'))
 }
