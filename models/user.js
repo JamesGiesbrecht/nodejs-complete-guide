@@ -67,14 +67,24 @@ class User {
       .catch((error) => console.log(error))
   }
 
+  deleteItemFromCart(productId) {
+    const updatedCartItems = this.cart.items.filter((item) => (
+      item.productId.toString() !== productId
+    ))
+
+    const db = getDb()
+    return db.collection('users')
+      .updateOne(
+        { _id: new mongodb.ObjectID(this._id) },
+        { $set: { cart: { items: updatedCartItems } } },
+      )
+  }
+
   static findById(userId) {
     const db = getDb()
     return db.collection('users')
       .findOne({ _id: new mongodb.ObjectID(userId) })
-      .then((user) => {
-        // console.log(user)
-        return user
-      })
+      .then((user) => user)
       .catch((error) => console.log(error))
   }
 }
