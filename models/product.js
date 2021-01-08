@@ -24,7 +24,7 @@ class Product {
     }
     return dbOp
       .then((result) => {
-        console.log(result)
+        // console.log(result)
       })
       .catch((error) => console.log(error))
   }
@@ -35,7 +35,7 @@ class Product {
       .find()
       .toArray() // Only use if there is only a few docs
       .then((products) => {
-        console.log(products)
+        // console.log(products)
         return products
       })
       .catch((error) => console.log(error))
@@ -47,7 +47,7 @@ class Product {
       .find({ _id: new mongodb.ObjectID(prodId) })
       .next() // Gets the next/last document
       .then((product) => {
-        console.log(product)
+        // console.log(product)
         return product
       })
       .catch((error) => console.log(error))
@@ -58,7 +58,7 @@ class Product {
     return db.collection('products')
       .deleteOne({ _id: new mongodb.ObjectID(prodId) })
       .then((product) => {
-        console.log('Deleted', product)
+        console.log('Deleted', product.title)
       })
       .catch((error) => console.log(error))
   }

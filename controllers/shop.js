@@ -21,7 +21,7 @@ exports.postCart = (req, res) => {
       req.user.addToCart(product)
     ))
     .then((result) => {
-      console.log(result)
+      // console.log(result)
     })
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/cart'))

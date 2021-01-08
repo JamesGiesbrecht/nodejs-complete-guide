@@ -14,7 +14,7 @@ class User {
     return db.collection('users')
       .insertOne(this)
       .then((result) => {
-        console.log(result)
+        // console.log(result)
       })
       .catch((error) => console.log(error))
   }
