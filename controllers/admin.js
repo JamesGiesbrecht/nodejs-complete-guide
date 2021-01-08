@@ -11,13 +11,9 @@ exports.getAddProduct = (req, res) => {
 
 exports.postAddProduct = (req, res) => {
   const { title, imageUrl, price, description } = req.body
-  // DB entry added in middleware
-  req.user.createProduct({
-    title,
-    imageUrl,
-    price,
-    description,
-  })
+  const product = new Product(title, price, description, imageUrl, null, req.user._id)
+  product
+    .save()
     .then((result) => console.log(`Created product: ${title}`))
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/admin/products'))
@@ -29,10 +25,8 @@ exports.getEditProduct = (req, res) => {
 
   const { productId } = req.params
 
-  req.user
-    .getProducts({ where: { id: productId } })
-  // Product.findByPk(productId)
-    .then(([product]) => {
+  Product.findById(productId)
+    .then((product) => {
       if (!product) return res.redirect('/')
       res.render('admin/edit-product', {
         pageTitle: 'Edit Product',
@@ -46,14 +40,8 @@ exports.getEditProduct = (req, res) => {
 
 exports.postEditProduct = (req, res) => {
   const { productId, title, imageUrl, price, description } = req.body
-  Product.findByPk(productId)
-    .then((product) => {
-      product.title = title
-      product.imageUrl = imageUrl
-      product.price = price
-      product.description = description
-      return product.save()
-    })
+  const product = new Product(title, price, description, imageUrl, productId)
+  product.save()
     .then((result) => {
       // product.save then
       console.log(`Updated Product: ${title}`)
@@ -64,17 +52,14 @@ exports.postEditProduct = (req, res) => {
 
 exports.postDeleteProduct = (req, res) => {
   const { productId } = req.body
-  Product.findByPk(productId)
-    .then((product) => product.destroy())
+  Product.deleteById(productId)
     .then((result) => console.log(`Destroyed product: ${productId}`))
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/admin/products'))
 }
 
 exports.getProducts = (req, res) => {
-  req.user
-    .getProducts()
-  // Product.findAll()
+  Product.fetchAll()
     .then((products) => {
       res.render('admin/products', {
         prods: products,

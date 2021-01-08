@@ -1,8 +1,26 @@
-const Sequelize = require('sequelize')
+const mongodb = require('mongodb')
 
-const sequelize = new Sequelize('nodejs-complete-guide', 'root', 'password', {
-  dialect: 'mysql',
-  host: 'localhost',
-})
+const { MongoClient } = mongodb
 
-module.exports = sequelize
+let db
+
+const mongoConnect = (cb) => {
+  MongoClient
+    .connect('mongodb+srv://nodejs-user:nodejs-password@nodejs-complete-guide.bpxav.mongodb.net/shop?retryWrites=true&w=majority')
+    .then((client) => {
+      console.log('Connected to MongoDB')
+      db = client.db()
+      cb()
+    })
+    .catch((error) => {
+      console.log(error)
+      throw error
+    })
+}
+
+const getDb = () => {
+  if (db) return db
+  throw new Error('No database found')
+}
+
+module.exports = { mongoConnect, getDb }

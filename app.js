@@ -1,21 +1,16 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
-const sequelize = require('./util/database')
+
+const { mongoConnect } = require('./util/database')
 
 const app = express()
 const PORT = 3000
 
-const Product = require('./models/product')
-const User = require('./models/user')
-const Cart = require('./models/cart')
-const CartItem = require('./models/cartItem')
-const Order = require('./models/order')
-const OrderItem = require('./models/orderItem')
-
 const errorController = require('./controllers/error')
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
+const User = require('./models/user')
 
 app.set('view engine', 'ejs')
 //  Third party middleware to parse requests
@@ -24,9 +19,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Middleware to add the user to every request
 app.use((req, res, next) => {
-  User.findByPk(1)
+  User.findById('5ff79f6268d9dd7c15f6ac39')
     .then((user) => {
-      req.user = user
+      req.user = new User(user.name, user.email, user.cart, user._id)
       next()
     })
     .catch((error) => console.log(error))
@@ -38,30 +33,8 @@ app.use(shopRoutes)
 
 app.use(errorController.get404)
 
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' })
-User.hasMany(Product) // Optional
-User.hasOne(Cart)
-Cart.belongsTo(User) // Optional
-Cart.belongsToMany(Product, { through: CartItem })
-Product.belongsToMany(Cart, { through: CartItem })
-Order.belongsTo(User)
-User.hasMany(Order) // Optional
-Order.belongsToMany(Product, { through: OrderItem })
-
-
-sequelize
-  // .sync({ force: true }) // Might not want to use this in prod
-  .sync()
-  .then((result) => User.findByPk(1))
-  .then((user) => {
-    if (!user) {
-      return User.create({ name: 'James', email: 'test@test.com' })
-    }
-    return Promise.resolve(user)
-  })
-  .then((user) => user.createCart())
-  .then((cart) => app.listen(PORT))
-  .catch((error) => console.log(error))
-
-// eslint-disable-next-line no-console
-console.log(`Server is live on port ${PORT}`)
+mongoConnect(() => {
+  app.listen(PORT)
+  // eslint-disable-next-line no-console
+  console.log(`Server is live on port ${PORT}`)
+})
