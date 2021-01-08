@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Middleware to add the user to every request
 app.use((req, res, next) => {
-  User.findById('5ff8c8b728ce8b7604af82f4')
+  User.findById('5ff8cd59150eb77b38129228')
     .then((user) => {
       req.user = user
       next()
@@ -40,7 +40,7 @@ mongoose.connect('mongodb+srv://nodejs-user:nodejs-password@nodejs-complete-guid
           new User({
             name: 'James',
             email: 'james@test.com',
-            cart: [],
+            cart: { items: [] },
           }).save()
         }
       })

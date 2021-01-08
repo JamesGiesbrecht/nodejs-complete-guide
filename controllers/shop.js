@@ -2,12 +2,13 @@ const Product = require('../models/product')
 
 exports.getCart = (req, res) => {
   req.user
-    .getCart()
-    .then((products) => {
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then((user) => {
       res.render('shop/cart', {
         pageTitle: 'My Cart',
         path: '/cart',
-        products,
+        products: user.cart.items,
       })
     })
     .catch((error) => console.log(error))
