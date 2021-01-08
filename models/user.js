@@ -105,13 +105,11 @@ class User {
   }
 
   getOrders() {
-    // const db = getDb()
-    // return db.collection('orders')
-    //   .find()
-    //   .then((result) => {
-    //     this.cart = { items: [] }
-    //   })
-    //   .catch((error) => console.log(error))
+    const db = getDb()
+    return db.collection('orders')
+      .find({ 'user._id': new mongodb.ObjectID(this._id) })
+      .toArray()
+      .catch((error) => console.log(error))
   }
 
   static findById(userId) {
