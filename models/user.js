@@ -21,7 +21,7 @@ class User {
 
   addToCart(product) {
     const cartProductIndex = this.cart.items.findIndex((item) => (
-      item._id.toString() === product._id.toString()
+      item.productId.toString() === product._id.toString()
     ))
 
     const updatedCartItems = [...this.cart.items]
@@ -32,7 +32,7 @@ class User {
       updatedCartItems[cartProductIndex].quantity = newQuantity
     } else {
       updatedCartItems.push({
-        _id: new mongodb.ObjectID(product._id),
+        productId: new mongodb.ObjectID(product._id),
         quantity: 1,
       })
     }
@@ -46,12 +46,33 @@ class User {
       )
   }
 
+  getCart() {
+    const db = getDb()
+    const productIds = this.cart.items.map((item) => item.productId)
+    return db.collection('products')
+      .find({ _id: { $in: productIds } })
+      .toArray()
+      .then((products) => (
+        products.map((product) => {
+          const productQuantity = this.cart.items.find((item) => (
+            item.productId.toString() === product._id.toString()
+          )).quantity
+
+          return {
+            ...product,
+            quantity: productQuantity,
+          }
+        })
+      ))
+      .catch((error) => console.log(error))
+  }
+
   static findById(userId) {
     const db = getDb()
     return db.collection('users')
       .findOne({ _id: new mongodb.ObjectID(userId) })
       .then((user) => {
-        console.log(user)
+        // console.log(user)
         return user
       })
       .catch((error) => console.log(error))

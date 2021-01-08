@@ -3,7 +3,6 @@ const Product = require('../models/product')
 exports.getCart = (req, res) => {
   req.user
     .getCart()
-    .then((cart) => cart.getProducts())
     .then((products) => {
       res.render('shop/cart', {
         pageTitle: 'My Cart',
