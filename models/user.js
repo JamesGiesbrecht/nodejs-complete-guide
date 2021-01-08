@@ -1,3 +1,4 @@
+/*
 const mongodb = require('mongodb')
 const { getDb } = require('../util/database')
 
@@ -122,3 +123,4 @@ class User {
 }
 
 module.exports = User
+*/
