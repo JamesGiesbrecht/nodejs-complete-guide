@@ -103,7 +103,7 @@ exports.postOrder = (req, res) => {
     .execPopulate()
     .then((user) => {
       const products = user.cart.items.map((item) => (
-        { quantity: item.quantity, productData: item.productId }
+        { quantity: item.quantity, productData: { ...item.productId._doc } }
       ))
       const order = new Order({
         user: {
@@ -114,6 +114,7 @@ exports.postOrder = (req, res) => {
       })
       return order.save()
     })
+    .then((result) => req.user.clearCart())
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/orders'))
 }
