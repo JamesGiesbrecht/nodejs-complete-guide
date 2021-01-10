@@ -1,13 +1,15 @@
 const Product = require('../models/product')
+const Order = require('../models/order')
 
 exports.getCart = (req, res) => {
   req.user
-    .getCart()
-    .then((products) => {
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then((user) => {
       res.render('shop/cart', {
         pageTitle: 'My Cart',
         path: '/cart',
-        products,
+        products: user.cart.items,
       })
     })
     .catch((error) => console.log(error))
@@ -27,14 +29,14 @@ exports.postCartDeleteItem = (req, res) => {
   const { productId } = req.body
 
   req.user
-    .deleteItemFromCart(productId)
+    .removeFromCart(productId)
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/cart'))
 }
 
 exports.getOrders = (req, res) => {
-  req.user
-    .getOrders()
+  Order
+    .find({ 'user.userId': req.user._id })
     .then((orders) => {
       res.render('shop/orders', {
         pageTitle: 'My Orders',
@@ -53,7 +55,7 @@ exports.getCheckout = (req, res) => {
 }
 
 exports.getIndex = (req, res) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render('shop/index', {
         prods: products,
@@ -72,7 +74,7 @@ exports.getProductDetail = (req, res) => {
 }
 
 exports.getProducts = (req, res) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render('shop/product-list', {
         prods: products,
@@ -97,7 +99,22 @@ exports.getProduct = (req, res) => {
 
 exports.postOrder = (req, res) => {
   req.user
-    .addOrder()
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then((user) => {
+      const products = user.cart.items.map((item) => (
+        { quantity: item.quantity, productData: { ...item.productId._doc } }
+      ))
+      const order = new Order({
+        user: {
+          name: req.user.name,
+          userId: req.user,
+        },
+        products,
+      })
+      return order.save()
+    })
+    .then((result) => req.user.clearCart())
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/orders'))
 }
