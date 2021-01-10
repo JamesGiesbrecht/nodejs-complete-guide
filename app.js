@@ -1,11 +1,18 @@
 const express = require('express')
 const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 const path = require('path')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
-const app = express()
 const PORT = 3000
+const MONGODB_URI = 'mongodb+srv://nodejs-user:nodejs-password@nodejs-complete-guide.bpxav.mongodb.net/shop'
+
+const app = express()
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions',
+})
 
 const errorController = require('./controllers/error')
 const adminRoutes = require('./routes/admin')
@@ -17,7 +24,12 @@ app.set('view engine', 'ejs')
 //  Third party middleware to parse requests
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(session({ secret: 'password', resave: false, saveUninitialized: false }))
+app.use(session({
+  secret: 'password',
+  resave: false,
+  saveUninitialized: false,
+  store,
+}))
 
 // Middleware to add the user to every request
 app.use((req, res, next) => {
@@ -36,7 +48,7 @@ app.use(authRoutes)
 
 app.use(errorController.get404)
 
-mongoose.connect('mongodb+srv://nodejs-user:nodejs-password@nodejs-complete-guide.bpxav.mongodb.net/shop?retryWrites=true&w=majority')
+mongoose.connect(MONGODB_URI)
   .then((result) => {
     User.findOne()
       .then((user) => {
