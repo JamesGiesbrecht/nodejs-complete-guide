@@ -2,6 +2,13 @@
   margin: 1rem 0;
 }
 
+.form {
+  width: 20rem;
+  max-width: 90%;
+  margin: auto;
+  display: block;
+}
+
 .form-control label,
 .form-control input,
 .form-control textarea {

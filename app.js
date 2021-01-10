@@ -8,6 +8,7 @@ const PORT = 3000
 
 const errorController = require('./controllers/error')
 const adminRoutes = require('./routes/admin')
+const authRoutes = require('./routes/auth')
 const shopRoutes = require('./routes/shop')
 const User = require('./models/user')
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 //  Importing routes to app.js, the order still matters
 app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
 app.use(shopRoutes)
+app.use(authRoutes)
 
 app.use(errorController.get404)
 
