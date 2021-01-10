@@ -1,4 +1,5 @@
 const express = require('express')
+const session = require('express-session')
 const path = require('path')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -16,6 +17,7 @@ app.set('view engine', 'ejs')
 //  Third party middleware to parse requests
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(session({ secret: 'password', resave: false, saveUninitialized: false }))
 
 // Middleware to add the user to every request
 app.use((req, res, next) => {
