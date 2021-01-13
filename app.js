@@ -31,16 +31,6 @@ app.use(session({
   store,
 }))
 
-// Middleware to add the user to every request
-app.use((req, res, next) => {
-  User.findById('5ff8cd59150eb77b38129228')
-    .then((user) => {
-      req.user = user
-      next()
-    })
-    .catch((error) => console.log(error))
-})
-
 //  Importing routes to app.js, the order still matters
 app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
 app.use(shopRoutes)
