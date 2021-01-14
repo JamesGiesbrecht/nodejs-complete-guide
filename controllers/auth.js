@@ -19,14 +19,32 @@ exports.getSignUp = (req, res, next) => {
 }
 
 exports.postLogin = (req, res) => {
-  User.findById('5ff8cd59150eb77b38129228')
+  const { email, password } = req.body
+  let foundUser
+  User.findOne({ email })
     .then((user) => {
-      req.session.isAuthenticated = true
-      req.session.user = user
-      req.session.save()
+      if (!user) {
+        throw new Error('User not found')
+      }
+      foundUser = user
+      return bcrypt.compare(password, user.password)
     })
-    .catch((error) => console.log(error))
-    .finally(() => res.redirect('/'))
+    .then((doMatch) => {
+      if (doMatch) {
+        req.session.isAuthenticated = true
+        req.session.user = foundUser
+        return req.session.save()
+      }
+      throw new Error('Invalid Password')
+    })
+    .then((error) => {
+      if (error) throw error
+      res.redirect('/')
+    })
+    .catch((error) => {
+      console.log(error)
+      res.redirect('/login')
+    })
 }
 
 exports.postSignUp = (req, res) => {
