@@ -6,6 +6,7 @@ exports.getLogin = (req, res) => {
   res.render('auth/login', {
     pageTitle: 'Login',
     path: '/login',
+    errorMessage: req.flash('error'),
   })
 }
 
@@ -13,7 +14,6 @@ exports.getSignUp = (req, res, next) => {
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Sign Up',
-    // isAuthenticated: false,
   })
 }
 
@@ -34,7 +34,7 @@ exports.postLogin = (req, res) => {
         req.session.user = foundUser
         return req.session.save()
       }
-      throw new Error('Invalid Password')
+      throw new Error('Invalid password')
     })
     .then((error) => {
       if (error) throw error
@@ -42,6 +42,7 @@ exports.postLogin = (req, res) => {
     })
     .catch((error) => {
       console.log(error)
+      req.flash('error', error.message)
       res.redirect('/login')
     })
 }

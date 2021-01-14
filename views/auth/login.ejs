@@ -5,6 +5,7 @@
 <body>
   <%- include('../includes/navigation.ejs') %>
   <main>
+    <div><%= errorMessage %></div>
     <form class="form" action="/login" method="POST">
       <div class="form-control">
         <label for="email">Email</label>

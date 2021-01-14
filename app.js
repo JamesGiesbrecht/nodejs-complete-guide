@@ -5,6 +5,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const csrf = require('csurf')
+const flash = require('connect-flash')
 
 const PORT = 3000
 const MONGODB_URI = 'mongodb+srv://nodejs-user:nodejs-password@nodejs-complete-guide.bpxav.mongodb.net/shop'
@@ -33,8 +34,8 @@ app.use(session({
   saveUninitialized: false,
   store,
 }))
-
 app.use(csrfProtection)
+app.use(flash())
 
 app.use((req, res, next) => {
   if (!req.session.user) {
