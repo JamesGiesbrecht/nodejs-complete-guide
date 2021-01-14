@@ -4,6 +4,7 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const path = require('path')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const csrf = require('csurf')
 
 const PORT = 3000
 const MONGODB_URI = 'mongodb+srv://nodejs-user:nodejs-password@nodejs-complete-guide.bpxav.mongodb.net/shop'
@@ -13,6 +14,7 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions',
 })
+const csrfProtection = csrf()
 
 const errorController = require('./controllers/error')
 const adminRoutes = require('./routes/admin')
@@ -32,6 +34,8 @@ app.use(session({
   store,
 }))
 
+app.use(csrfProtection)
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next()
@@ -42,6 +46,12 @@ app.use((req, res, next) => {
       next()
     })
     .catch((error) => console.log(error))
+})
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isAuthenticated
+  res.locals.csrfToken = req.csrfToken()
+  next()
 })
 
 //  Importing routes to app.js, the order still matters
