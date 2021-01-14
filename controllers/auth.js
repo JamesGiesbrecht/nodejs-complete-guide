@@ -34,7 +34,7 @@ exports.postSignUp = (req, res) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        return res.redirect('/signup')
+        throw new Error('User already exists')
       }
       return bcrypt.hash(password, 12)
     })
@@ -47,7 +47,10 @@ exports.postSignUp = (req, res) => {
       return newUser.save()
     })
     .then((result) => res.redirect('/login'))
-    .catch((error) => console.log(error))
+    .catch((error) => {
+      console.log(error)
+      res.redirect('/signup')
+    })
 }
 
 exports.postLogout = (req, res) => {
