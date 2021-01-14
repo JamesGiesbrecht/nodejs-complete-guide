@@ -5,7 +5,9 @@
 <body>
   <%- include('../includes/navigation.ejs') %>
   <main>
-    <div><%= errorMessage %></div>
+    <% if (errorMessage) { console.log(errorMessage)%>
+      <div class="user-message user-message--error"><%= errorMessage %></div>
+    <% } %>
     <form class="form" action="/login" method="POST">
       <div class="form-control">
         <label for="email">Email</label>
