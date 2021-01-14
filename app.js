@@ -52,16 +52,6 @@ app.use(errorController.get404)
 
 mongoose.connect(MONGODB_URI)
   .then((result) => {
-    User.findOne()
-      .then((user) => {
-        if (!user) {
-          new User({
-            name: 'James',
-            email: 'james@test.com',
-            cart: { items: [] },
-          }).save()
-        }
-      })
     app.listen(PORT)
     // eslint-disable-next-line no-console
     console.log(`Server is live on port ${PORT}`)

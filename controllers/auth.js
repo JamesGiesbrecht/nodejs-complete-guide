@@ -8,10 +8,10 @@ exports.getLogin = (req, res) => {
   })
 }
 
-exports.getSignup = (req, res, next) => {
+exports.getSignUp = (req, res, next) => {
   res.render('auth/signup', {
     path: '/signup',
-    pageTitle: 'Signup',
+    pageTitle: 'Sign Up',
     isAuthenticated: false,
   })
 }
@@ -27,7 +27,23 @@ exports.postLogin = (req, res) => {
     .finally(() => res.redirect('/'))
 }
 
-exports.postSignup = (req, res) => {}
+exports.postSignUp = (req, res) => {
+  const { email, password, confirmPassword } = req.body
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return res.redirect('/signup')
+      }
+      const newUser = new User({
+        email,
+        password,
+        cart: { items: [] },
+      })
+      return newUser.save()
+    })
+    .then((result) => res.redirect('/login'))
+    .catch((error) => console.log(error))
+}
 
 exports.postLogout = (req, res) => {
   req.session.destroy((err) => {
