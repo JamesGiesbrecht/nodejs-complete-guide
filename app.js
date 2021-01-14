@@ -19,6 +19,7 @@ const adminRoutes = require('./routes/admin')
 const authRoutes = require('./routes/auth')
 const shopRoutes = require('./routes/shop')
 const User = require('./models/user')
+const isAuth = require('./middleware/isAuth')
 
 app.set('view engine', 'ejs')
 //  Third party middleware to parse requests
@@ -44,7 +45,7 @@ app.use((req, res, next) => {
 })
 
 //  Importing routes to app.js, the order still matters
-app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
+app.use('/admin', isAuth, adminRoutes) // Filtering admin routes with a /admin in the url
 app.use(shopRoutes)
 app.use(authRoutes)
 

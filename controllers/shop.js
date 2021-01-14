@@ -89,6 +89,7 @@ exports.getProducts = (req, res) => {
         isAuthenticated: req.session.isAuthenticated,
       })
     })
+    .catch((error) => console.log(error))
 }
 
 exports.getProduct = (req, res) => {
