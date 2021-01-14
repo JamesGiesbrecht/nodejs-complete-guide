@@ -31,6 +31,18 @@ app.use(session({
   store,
 }))
 
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next()
+  }
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user
+      next()
+    })
+    .catch((error) => console.log(error))
+})
+
 //  Importing routes to app.js, the order still matters
 app.use('/admin', adminRoutes) // Filtering admin routes with a /admin in the url
 app.use(shopRoutes)

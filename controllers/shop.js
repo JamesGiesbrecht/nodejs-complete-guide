@@ -3,7 +3,7 @@ const Order = require('../models/order')
 
 exports.getCart = (req, res) => {
   console.log(req.session.isAuthenticated)
-  req.session.user
+  req.user
     .populate('cart.items.productId')
     .execPopulate()
     .then((user) => {
@@ -21,7 +21,7 @@ exports.postCart = (req, res) => {
   const { productId } = req.body
   Product.findById(productId)
     .then((product) => (
-      req.session.user.addToCart(product)
+      req.user.addToCart(product)
     ))
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/cart'))
@@ -30,7 +30,7 @@ exports.postCart = (req, res) => {
 exports.postCartDeleteItem = (req, res) => {
   const { productId } = req.body
 
-  req.session.user
+  req.user
     .removeFromCart(productId)
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/cart'))
@@ -38,7 +38,7 @@ exports.postCartDeleteItem = (req, res) => {
 
 exports.getOrders = (req, res) => {
   Order
-    .find({ 'user.userId': req.session.user._id })
+    .find({ 'user.userId': req.user._id })
     .then((orders) => {
       res.render('shop/orders', {
         pageTitle: 'My Orders',
@@ -106,7 +106,7 @@ exports.getProduct = (req, res) => {
 }
 
 exports.postOrder = (req, res) => {
-  req.session.user
+  req.user
     .populate('cart.items.productId')
     .execPopulate()
     .then((user) => {
@@ -115,14 +115,14 @@ exports.postOrder = (req, res) => {
       ))
       const order = new Order({
         user: {
-          name: req.session.user.name,
-          userId: req.session.user,
+          name: req.user.name,
+          userId: req.user,
         },
         products,
       })
       return order.save()
     })
-    .then((result) => req.session.user.clearCart())
+    .then((result) => req.user.clearCart())
     .catch((error) => console.log(error))
     .finally(() => res.redirect('/orders'))
 }

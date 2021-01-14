@@ -13,14 +13,15 @@ exports.postLogin = (req, res) => {
     .then((user) => {
       req.session.isAuthenticated = true
       req.session.user = user
-      res.redirect('/')
+      req.session.save()
     })
     .catch((error) => console.log(error))
+    .finally(() => res.redirect('/'))
 }
 
 exports.postLogout = (req, res) => {
   req.session.destroy((err) => {
-    console.log(err)
+    if (err) console.log(err)
     res.redirect('/')
   })
 }
