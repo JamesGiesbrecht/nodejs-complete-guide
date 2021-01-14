@@ -96,6 +96,9 @@ exports.getProduct = (req, res) => {
   const { productId } = req.params
   Product.findById(productId)
     .then((product) => {
+      if (!product) {
+        throw new Error('Product not found')
+      }
       res.render('shop/product-detail', {
         product,
         pageTitle: `${product.title} Details`,
@@ -103,7 +106,10 @@ exports.getProduct = (req, res) => {
         isAuthenticated: req.session.isAuthenticated,
       })
     })
-    .catch((error) => console.log(error))
+    .catch((error) => {
+      console.log(error)
+      res.redirect('/products')
+    })
 }
 
 exports.postOrder = (req, res) => {
