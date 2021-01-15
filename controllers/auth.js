@@ -1,22 +1,80 @@
+const bcrypt = require('bcryptjs')
+
 const User = require('../models/user')
 
 exports.getLogin = (req, res) => {
+  let errorMessage = req.flash('error')
+  errorMessage = errorMessage.length > 0 ? errorMessage[0] : null
   res.render('auth/login', {
     pageTitle: 'Login',
     path: '/login',
-    isAuthenticated: req.session.isAuthenticated,
+    errorMessage,
+  })
+}
+
+exports.getSignUp = (req, res, next) => {
+  let errorMessage = req.flash('error')
+  errorMessage = errorMessage.length > 0 ? errorMessage[0] : null
+  res.render('auth/signup', {
+    path: '/signup',
+    pageTitle: 'Sign Up',
+    errorMessage,
   })
 }
 
 exports.postLogin = (req, res) => {
-  User.findById('5ff8cd59150eb77b38129228')
+  const { email, password } = req.body
+  let foundUser
+  User.findOne({ email })
     .then((user) => {
-      req.session.isAuthenticated = true
-      req.session.user = user
-      req.session.save()
+      if (!user) {
+        throw new Error('User not found')
+      }
+      foundUser = user
+      return bcrypt.compare(password, user.password)
     })
-    .catch((error) => console.log(error))
-    .finally(() => res.redirect('/'))
+    .then((doMatch) => {
+      if (doMatch) {
+        req.session.isAuthenticated = true
+        req.session.user = foundUser
+        return req.session.save()
+      }
+      throw new Error('Invalid password')
+    })
+    .then((error) => {
+      if (error) throw error
+      res.redirect('/')
+    })
+    .catch((error) => {
+      console.log(error)
+      req.flash('error', error.message)
+      res.redirect('/login')
+    })
+}
+
+exports.postSignUp = (req, res) => {
+  const { email, password, confirmPassword } = req.body
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        throw new Error('User already exists')
+      }
+      return bcrypt.hash(password, 12)
+    })
+    .then((hashedPassword) => {
+      const newUser = new User({
+        email,
+        password: hashedPassword,
+        cart: { items: [] },
+      })
+      return newUser.save()
+    })
+    .then((result) => res.redirect('/login'))
+    .catch((error) => {
+      console.log(error)
+      req.flash('error', error.message)
+      res.redirect('/signup')
+    })
 }
 
 exports.postLogout = (req, res) => {

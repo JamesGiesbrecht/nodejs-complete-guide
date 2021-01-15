@@ -11,7 +11,6 @@ exports.getCart = (req, res) => {
         pageTitle: 'My Cart',
         path: '/cart',
         products: user.cart.items,
-        isAuthenticated: req.session.isAuthenticated,
       })
     })
     .catch((error) => console.log(error))
@@ -44,7 +43,6 @@ exports.getOrders = (req, res) => {
         pageTitle: 'My Orders',
         path: '/orders',
         orders,
-        isAuthenticated: req.session.isAuthenticated,
       })
     })
     .catch((error) => console.log(error))
@@ -54,7 +52,6 @@ exports.getCheckout = (req, res) => {
   res.render('shop/checkout', {
     pageTitle: 'Checkout',
     path: '/checkout',
-    isAuthenticated: req.session.isAuthenticated,
   })
 }
 
@@ -65,7 +62,6 @@ exports.getIndex = (req, res) => {
         prods: products,
         pageTitle: 'Shop',
         path: '/',
-        isAuthenticated: req.session.isAuthenticated,
       })
     })
     .catch((error) => console.log(error))
@@ -75,7 +71,6 @@ exports.getProductDetail = (req, res) => {
   res.render('shop/product-detail', {
     pageTitle: 'Product Detail',
     path: '/product-detail',
-    isAuthenticated: req.session.isAuthenticated,
   })
 }
 
@@ -86,23 +81,28 @@ exports.getProducts = (req, res) => {
         prods: products,
         pageTitle: 'All Products',
         path: '/products',
-        isAuthenticated: req.session.isAuthenticated,
       })
     })
+    .catch((error) => console.log(error))
 }
 
 exports.getProduct = (req, res) => {
   const { productId } = req.params
   Product.findById(productId)
     .then((product) => {
+      if (!product) {
+        throw new Error('Product not found')
+      }
       res.render('shop/product-detail', {
         product,
         pageTitle: `${product.title} Details`,
         path: '/products',
-        isAuthenticated: req.session.isAuthenticated,
       })
     })
-    .catch((error) => console.log(error))
+    .catch((error) => {
+      console.log(error)
+      res.redirect('/products')
+    })
 }
 
 exports.postOrder = (req, res) => {
@@ -115,7 +115,7 @@ exports.postOrder = (req, res) => {
       ))
       const order = new Order({
         user: {
-          name: req.user.name,
+          email: req.user.email,
           userId: req.user,
         },
         products,
