@@ -13,9 +13,12 @@ exports.getLogin = (req, res) => {
 }
 
 exports.getSignUp = (req, res, next) => {
+  let errorMessage = req.flash('error')
+  errorMessage = errorMessage.length > 0 ? errorMessage[0] : null
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Sign Up',
+    errorMessage,
   })
 }
 
@@ -69,6 +72,7 @@ exports.postSignUp = (req, res) => {
     .then((result) => res.redirect('/login'))
     .catch((error) => {
       console.log(error)
+      req.flash('error', error.message)
       res.redirect('/signup')
     })
 }
