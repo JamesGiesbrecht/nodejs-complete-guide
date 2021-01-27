@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
@@ -8,7 +9,7 @@ const csrf = require('csurf')
 const flash = require('connect-flash')
 
 const PORT = 3000
-const MONGODB_URI = 'mongodb+srv://nodejs-user:nodejs-password@nodejs-complete-guide.bpxav.mongodb.net/shop'
+const MONGODB_URI = process.env.MONGODB_URL
 
 const app = express()
 const store = new MongoDBStore({
