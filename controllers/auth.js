@@ -71,6 +71,12 @@ exports.postSignUp = (req, res) => {
       if (user) {
         throw new Error('User already exists')
       }
+      if (!password) {
+        throw new Error('Password must not be empty')
+      // eslint-disable-next-line security/detect-possible-timing-attacks
+      } else if (password !== confirmPassword) {
+        throw new Error('Passwords do not match')
+      }
       return bcrypt.hash(password, 12)
     })
     .then((hashedPassword) => {
