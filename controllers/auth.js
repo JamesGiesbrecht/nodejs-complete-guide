@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport')
+const { validationResult } = require('express-validator/check')
 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
@@ -65,6 +66,16 @@ exports.postLogin = (req, res) => {
 }
 
 exports.postSignUp = (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(422).render(
+      res.render('auth/signup', {
+        path: '/signup',
+        pageTitle: 'Sign Up',
+        errorMessage: errors.array(),
+      })
+    )
+  }
   const { email, password, confirmPassword } = req.body
   User.findOne({ email })
     .then((user) => {
