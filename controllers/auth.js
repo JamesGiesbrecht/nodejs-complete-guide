@@ -72,7 +72,7 @@ exports.postSignUp = (req, res) => {
       res.render('auth/signup', {
         path: '/signup',
         pageTitle: 'Sign Up',
-        errorMessage: errors.array(),
+        errorMessage: errors.array()[0].msg,
       })
     )
   }
